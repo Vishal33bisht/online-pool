@@ -1,8 +1,4 @@
-export const allowedOrigins =["http://localhost:5173","https://online-pool.vercel.app"]
-    .split(",")
-    .map((origin) => origin.trim())
-    .filter(Boolean);
-
+export const allowedOrigins =["http://localhost:5173","https://online-pool.vercel.app"];
 export const corsOptions = {
     origin(origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
