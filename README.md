@@ -37,7 +37,7 @@ Follow these instructions to set up the project locally on your machine.
 * npm or yarn
 * A relational database like PostgreSQL or MySQL (supported by Prisma)
 
-### 1. Clone the Repository
+### STEPS
 
 ```bash
 git clone [https://github.com/vishal33bisht/online-pool.git](https://github.com/vishal33bisht/online-pool.git)
