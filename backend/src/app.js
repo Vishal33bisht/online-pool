@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes.js";
 import pollRoutes from "./routes/poll.routes.js";
 import responseRoutes from "./routes/response.routes.js";
+import { corsOptions } from "./config/cors.js";
 
 const app = express();
 
@@ -11,12 +12,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(
-    cors({
-        origin: process.env.CLIENT_URL,
-        credentials: true,
-    })
-);
+app.use(cors(corsOptions));
 
 // Routes
 app.use("/api/auth", authRoutes);

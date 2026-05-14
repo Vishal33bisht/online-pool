@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import prisma from "../config/prisma.js"
 import generateToken from "../utils/generateToken.js";
+import { authCookieOptions, clearAuthCookieOptions } from "../config/cookies.js";
 
 export const register = async (req, res) => {
     try {
@@ -27,12 +28,7 @@ export const register = async (req, res) => {
         });
 
         const token = generateToken(user.id);
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+        res.cookie("token", token, authCookieOptions);
 
         return res.status(201).json({
             success: true,
@@ -78,12 +74,7 @@ export const login = async (req, res) => {
             });
         }
         const token = generateToken(user.id);
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-        });
+        res.cookie("token", token, authCookieOptions);
         return res.status(200).json({
             success: true,
             message: "Login successful",
@@ -103,7 +94,7 @@ export const login = async (req, res) => {
 };
 
 export const logout = async (req, res) => {
-    res.clearCookie("token");
+    res.clearCookie("token", clearAuthCookieOptions);
     return res.status(200).json({
         success: true,
         message: "Logout successful"
