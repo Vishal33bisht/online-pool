@@ -17,6 +17,84 @@ model User {
   name  String 
   email String @unique
   password  String
+  polls Poll[]
+  responses Response[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model Poll {
+  id    String @id @default(uuid())
+  title String
+  description String?
+  slug String @unique
+  createdBy String
+  creator User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  questions Question[]
+  responses Response[]
+  isAnonymous Boolean @default(false)
+  isPublished Boolean @default(false)
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([createdBy])
+  @@index([slug])
+}
+
+model Question {
+  id String @id @default(uuid())
+  pollId String
+  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  text String
+  isMandatory Boolean @default(false)
+  options Option[]
+  responses QuestionResponse[]
+  order Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([pollId])
+}
+
+model Option {
+  id String @id @default(uuid())
+  questionId String
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  text String
+  order Int @default(0)
+  responses QuestionResponse[]
+  createdAt DateTime @default(now())
+
+  @@index([questionId])
+}
+
+model Response {
+  id String @id @default(uuid())
+  pollId String
+  poll Poll @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  respondentId String?
+  respondent User? @relation(fields: [respondentId], references: [id], onDelete: SetNull)
+  questionResponses QuestionResponse[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([pollId, respondentId])
+  @@index([pollId])
+  @@index([respondentId])
+}
+
+model QuestionResponse {
+  id String @id @default(uuid())
+  responseId String
+  response Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
+  questionId String
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  selectedOptionId String
+  selectedOption Option @relation(fields: [selectedOptionId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([responseId, questionId])
+  @@index([questionId])
+  @@index([selectedOptionId])
 }
